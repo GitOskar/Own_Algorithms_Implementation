@@ -44,7 +44,6 @@ Set::Set()
 
 void Set::insert(string key)
 {
-    //słownik jest pusty
     if (root == nullptr)
     {
         root = new Node(key);
@@ -59,7 +58,7 @@ void Set::insert(string key)
     {
         if (tmp->key == key)
             return;
-        if (tmp->key > key) //jezeli element jest mniejszy od noda
+        if (tmp->key > key)
         {
             if (tmp->smaller_son != nullptr)
             {
@@ -74,7 +73,7 @@ void Set::insert(string key)
                 break;
             }
         }
-        else // jezeli element jest wiekszy badz rowny od noda
+        else
         {
             if (tmp->bigger_son != nullptr)
             {
@@ -107,60 +106,59 @@ void Set::restore_red_and_black(Node *node)
         return;
     }
 
-    //jezeli wlasnosc jest zachowana
+    //if everything is good
     if (node->father->colour == BLACK)
         return;
 
-    //jezeli wlasnosc nie jest zachowana
+    //if not
 
-    //sprawdzamy kolor wujka
     bool uncle_colour = uncle(node);
 
     if (uncle_colour == RED)
     {
-        //przekolorowujemy wujek juz przekolorowany
-        node->colour = RED; //z domyslu czerwony do usuniecia linijka prawdopodobnie
+        //recolour, uncle is already red
+        node->colour = RED;
         node->father->colour = BLACK;
         node->father->father->colour = RED;
         restore_red_and_black(node->father->father);
     }
-    else //wujek jest czarny
+    else //uncle is black
     {
-        //czy ojciec jest lewym synem
+        //is father a left son
         if (node->father->father->smaller_son == node->father)
         {
-            //czy node jest lewym synem
+            //is node a left son?
             if (node->father->smaller_son == node)
             {
-                //polozone liniowo
+                //in line
                 node = node->father;
 
                 rotate_left_with_colour(node);
             }
-            else //node jest prawym synem
+            else //node is a right son
             {
-                //polozone w trojkacie
+                //in triangle
                 rotate_right_without_colour(node);
 
-                //juz sa liniowo
+                //in line
                 rotate_left_with_colour(node);
             }
         }
-        else //ojciec jest prawym synem
+        else //father is right son
         {
-            //czy node jest prawym synem
+            //is node a right son?
             if (node->father->bigger_son == node)
             {
                 node = node->father;
 
                 rotate_right_with_colour(node);
             }
-            else//node jest lewym synem
+            else//node is left son
             {
-                //polozone w trojkacie
+                //in triangle
                 rotate_left_without_colour(node);
 
-                //juz sa liniowo
+                //in line
                 rotate_right_with_colour(node);
             }
         }
@@ -181,7 +179,7 @@ bool Set::uncle(Node *node)
             return RED;
         }
     }
-    else //ojciec node-a był wiekszym synem
+    else //father was bigger son
     {
         if(node->father->father->smaller_son == nullptr || node->father->father->smaller_son->colour == BLACK)
         {
@@ -237,7 +235,7 @@ void Set::rotate_left_with_colour(Node *node)
 
 void Set::rotate_left_without_colour(Node *node)
 {
-    if (node->father->father != nullptr) //prawdopodobnie nie potrzebne warunek
+    if (node->father->father != nullptr) //probably not necessary case
     {
         if (node->father->father->bigger_son == node->father)
             node->father->father->bigger_son = node;
@@ -254,7 +252,7 @@ void Set::rotate_left_without_colour(Node *node)
 
 void Set::rotate_right_without_colour(Node *node)
 {
-    if (node->father->father != nullptr) //prawdopodobnie nie potrzebne warunek
+    if (node->father->father != nullptr) //probably not necessary case
     {
         if (node->father->father->bigger_son == node->father)
             node->father->father->bigger_son = node;
